@@ -116,6 +116,70 @@
             color: var(--secondary-color);
         }
         
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--light-text);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--darker-bg);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu ul {
+            list-style: none;
+        }
+        
+        .mobile-menu li {
+            margin: 20px 0;
+        }
+        
+        .mobile-menu a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .mobile-menu a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .mobile-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--light-text);
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
         /* Home Section */
         .home {
             min-height: 100vh;
@@ -561,17 +625,20 @@
         
         /* Responsive Styles */
         @media (max-width: 768px) {
+            .desktop-header {
+                padding: 15px 0;
+            }
+            
+            .main-menu {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
             .intro h1 {
                 font-size: 40px;
-            }
-            
-            .main-menu ul {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .main-menu li {
-                margin: 10px 0;
             }
             
             .timeline::after {
@@ -606,7 +673,7 @@
         <div class="container">
             <div class="site-logo">
                 <a href="#home">
-                    
+                    <!-- Logo can be added here -->
                 </a>
             </div>
             
@@ -621,8 +688,29 @@
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul>
+            <li><a href="#home" class="mobile-nav-link">Home</a></li>
+            <li><a href="#about" class="mobile-nav-link">About</a></li>
+            <li><a href="#services" class="mobile-nav-link">Services</a></li>
+            <li><a href="#experience" class="mobile-nav-link">Experience</a></li>
+            <li><a href="#works" class="mobile-nav-link">Works</a></li>
+            <li><a href="#blog" class="mobile-nav-link">Blog</a></li>
+            <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+        </ul>
+    </div>
 
     <!-- Section Home -->
     <section id="home" class="home">
@@ -746,9 +834,6 @@
                         <p>Started my journey into Cybersecurity and Ethical Hacking</p>
                     </div>
                 </div>
-                
-                
-                </div>
             </div>
         </div>
     </section>
@@ -818,7 +903,7 @@
                 <div class="skill-item">
                     <div class="skill-info">
                         <h4>Web Application Pentesting</h4>
-                        <span>100%%</span>
+                        <span>100%</span>
                     </div>
                     <div class="skill-bar">
                         <div class="progress-bar" style="width: 100%; background-color: #FFD15C;"></div>
@@ -925,7 +1010,6 @@
                 
                 <ul class="social-icons list-inline">
                     <a href="mailto:hxxfrd73@gmail.com"><i class="fa fa-envelope"></i> hxxfrd73@gmail.com</a> | &nbsp;
-                  
                 </ul>
             </div>
         </div>
@@ -947,6 +1031,30 @@
         // Preloader
         window.addEventListener('load', function() {
             document.getElementById('preloader').style.display = 'none';
+        });
+        
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+        });
+        
+        mobileMenuClose.addEventListener('click', function() {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        });
+        
+        // Close menu when clicking on a link
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            });
         });
         
         // Text rotating animation
@@ -1006,28 +1114,4 @@
         
         // Animation on scroll
         function animateOnScroll() {
-            const elements = document.querySelectorAll('.section-title, .service-box, .timeline-content, .portfolio-item, .testimonial-item, .blog-item');
-            
-            elements.forEach(element => {
-                const position = element.getBoundingClientRect();
-                
-                // If element is in viewport
-                if(position.top < window.innerHeight && position.bottom >= 0) {
-                    element.style.opacity = 1;
-                    element.style.transform = 'translateY(0)';
-                }
-            });
-        }
-        
-        // Initialize elements with opacity 0 and slightly translated
-        document.querySelectorAll('.section-title, .service-box, .timeline-content, .portfolio-item, .testimonial-item, .blog-item').forEach(element => {
-            element.style.opacity = 0;
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        });
-        
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
-    </script>
-</body>
-</html>
+            const elements = document.querySelectorAll('.section
